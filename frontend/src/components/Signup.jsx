@@ -1,39 +1,39 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Signup = (props) => {
-  const host = "https://cloudnotebook-zp4a.onrender.com";
-  const [credentials, setCredentials] = useState({name: "", email: "", phone: "", password: ""});
+  const [credentials, setCredentials] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+  });
   let navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch(
-      `${host}/api/auth/signup`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: credentials.name,
-          phone: credentials.phone,
-          email: credentials.email,
-          password: credentials.password,
-        }),
-      }
-    );
+    const response = await fetch(`/api/auth/signup`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: credentials.name,
+        phone: credentials.phone,
+        email: credentials.email,
+        password: credentials.password,
+      }),
+    });
     const json = await response.json();
     if (json.success) {
       // Save the auth token and redirect
       localStorage.setItem("token", json.authToken);
       navigate("/");
       props.showAlert("Account Created Successfully.", "success");
-    } 
-    else{
-      props.showAlert(json.error , "danger");
+    } else {
+      props.showAlert(json.error, "danger");
     }
   };
   const onChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
-  }
+  };
   const [showPassword, setShowPassword] = useState(false);
   const togglePassword = () => {
     if (showPassword) {
@@ -128,6 +128,6 @@ const Signup = (props) => {
       </form>
     </div>
   );
-}
+};
 
-export default Signup
+export default Signup;

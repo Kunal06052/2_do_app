@@ -2,29 +2,25 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Login = (props) => {
-  const host = "https://cloudnotebook-zp4a.onrender.com";
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   let navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch(
-      `${host}/api/auth/login`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: credentials.email,
-          password: credentials.password,
-        }),
-      }
-    );
+    const response = await fetch(`/api/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: credentials.email,
+        password: credentials.password,
+      }),
+    });
     const json = await response.json();
     if (json.success) {
       // Save the auth token and redirect
       localStorage.setItem("token", json.authToken);
       navigate("/");
       props.showAlert("Logged In Successfully.", "success");
-    }  else {
+    } else {
       props.showAlert(json.error, "danger");
     }
   };
@@ -35,11 +31,10 @@ const Login = (props) => {
   const togglePassword = () => {
     if (showPassword) {
       setShowPassword(false);
-    } 
-    else{
+    } else {
       setShowPassword(true);
     }
-  }
+  };
   return (
     <div className="container my-4">
       <h2 className="my-3">Login to Continue</h2>

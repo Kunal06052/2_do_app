@@ -5,11 +5,13 @@ import user from "./img/user.svg";
 import noteContext from "../context/noteContext";
 
 function Navbar(props) {
-  useEffect( () => {
+  useEffect(() => {
     if (localStorage.getItem("token")) {
-      async function fetchData() {await getAccount(); console.log(account);}
+      async function fetchData() {
+        await getAccount();
+        console.log(account);
+      }
       fetchData();
-      
     } else {
       props.showAlert("Please Login or Signup", "warning");
       navigate("/login");
@@ -21,7 +23,7 @@ function Navbar(props) {
     uname: "",
     uemail: "",
     upassword: "",
-    udate: ""
+    udate: "",
   });
   const context = useContext(noteContext);
   const { account, getAccount, updateAccount } = context;
@@ -34,7 +36,7 @@ function Navbar(props) {
       uname: account.name,
       uemail: account.email,
       upassword: account.password,
-      udate: account.date
+      udate: account.date,
     });
   };
   const handleSubmit = (e) => {
@@ -43,7 +45,7 @@ function Navbar(props) {
       name: credentials.uname,
       email: credentials.uemail,
       password: credentials.upassword,
-      date: credentials.udate
+      date: credentials.udate,
     });
     if (updated) {
       document.getElementById("closeBtn").click();
@@ -142,7 +144,11 @@ function Navbar(props) {
                         id="udate"
                         name="udate"
                         onChange={onChange}
-                        value={credentials.udate ? (credentials.udate).slice(0, 24): ""}
+                        value={
+                          credentials.udate
+                            ? credentials.udate.slice(0, 24)
+                            : ""
+                        }
                         minLength={6}
                         disabled={true}
                       />
@@ -177,7 +183,7 @@ function Navbar(props) {
           <img src={logo} className="mx-2" alt="" width="40" height="40" />
 
           <Link className="navbar-brand" to="/">
-            Cloud Notebook
+            Note App
           </Link>
           <button
             className="navbar-toggler"

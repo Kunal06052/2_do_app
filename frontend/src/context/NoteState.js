@@ -2,7 +2,6 @@ import NoteContext from "./noteContext";
 import { useState } from "react";
 
 const NoteState = (props) => {
-  const host = "https://cloudnotebook-zp4a.onrender.com";
   const notesInitial = [];
   const [notes, setNotes] = useState(notesInitial);
   const accountInitial = [];
@@ -10,7 +9,7 @@ const NoteState = (props) => {
 
   // Get Account Credentials
   const getAccount = async () => {
-    const response = await fetch(`${host}/api/auth/credentials`, {
+    const response = await fetch(`/api/auth/credentials`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -24,7 +23,7 @@ const NoteState = (props) => {
   // Update Account Credentials
   const updateAccount = async (credentials) => {
     try {
-      const response = await fetch(`${host}/api/auth/credentials`, {
+      const response = await fetch(`/api/auth/credentials`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -43,7 +42,7 @@ const NoteState = (props) => {
 
   // Get all Notes
   const getNotes = async () => {
-    const response = await fetch(`${host}/api/notes/fetchallnotes/`, {
+    const response = await fetch(`/api/notes/fetchallnotes/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -51,9 +50,9 @@ const NoteState = (props) => {
       },
     });
     const json = await response.json();
-    if(json.success){
+    if (json.success) {
       setNotes(json.notes);
-    }else{
+    } else {
       return false;
     }
   };
@@ -61,7 +60,7 @@ const NoteState = (props) => {
   // Add a Note
   const addNote = async (tag, title, description) => {
     // API Call
-    const response = await fetch(`${host}/api/notes/addnote`, {
+    const response = await fetch(`/api/notes/addnote`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -70,7 +69,7 @@ const NoteState = (props) => {
       body: JSON.stringify({ tag, title, description }),
     });
     const note = await response.json();
-    if(note.success) {
+    if (note.success) {
       console.log(note);
       setNotes(notes.concat(note.savedNote));
     }
@@ -80,7 +79,7 @@ const NoteState = (props) => {
   const deleteNote = async (id) => {
     // API Call
     // eslint-disable-next-line
-    const response = await fetch(`${host}/api/notes/deletenote/${id}`, {
+    const response = await fetch(`/api/notes/deletenote/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -88,7 +87,7 @@ const NoteState = (props) => {
       },
     });
     const jsonData = await response.json();
-    if(jsonData.success){
+    if (jsonData.success) {
       let newNotes = notes.filter((note) => {
         return note._id !== id;
       });
@@ -99,7 +98,7 @@ const NoteState = (props) => {
   // Edit a Note
   const editNote = async ({ id, tag, title, description }) => {
     // API Call
-    const response = await fetch(`${host}/api/notes/updatenote/${id}`, {
+    const response = await fetch(`/api/notes/updatenote/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -109,19 +108,19 @@ const NoteState = (props) => {
     });
     // eslint-disable-next-line
     const json = await response.json();
-    if(json.success){
-    let newNotes = JSON.parse(JSON.stringify(notes));
-    for (let i = 0; i < newNotes.length; i++) {
-      const element = newNotes[i];
-      if (element._id === id) {
-        newNotes[i].title = title;
-        newNotes[i].description = description;
-        newNotes[i].tag = tag;
-        break;
+    if (json.success) {
+      let newNotes = JSON.parse(JSON.stringify(notes));
+      for (let i = 0; i < newNotes.length; i++) {
+        const element = newNotes[i];
+        if (element._id === id) {
+          newNotes[i].title = title;
+          newNotes[i].description = description;
+          newNotes[i].tag = tag;
+          break;
+        }
       }
+      setNotes(newNotes);
     }
-    setNotes(newNotes);
-  }
   };
 
   return (
